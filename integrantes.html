@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37 | EVALUACIÓN Nº2</title>
+        <link rel="icon" type="image/x-icon" href="C:\Users\jovas\Desktop\Diseño y nuevos medios\ev_2\favicon.png">
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">Josefina Imschenetzky</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="integrantes.html" selected>INTEGRANTES</option>
+                <option value="openweather.html">OPEN WEATHER</option>
+                <option value="picture.html">PICTURE OF THE DAY</option>
+                <option value="sismico.html">SÍSMICO</option>
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="Piscis" />Piscis</div>
+            <div><input type="radio" name="selecciona" value="Mutable" />mutable</div>
+            <div><input type="radio" name="selecciona" value="Agua" />agua</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/jimschenetzky/ev_2_ensayo/main/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                console.log(datos);
+                signos = [];
+                datos.forEach((x) => {
+                    if(x.github !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                        signos.push(x.zodiaco.signo);
+                    }
+                });
+
+
+    const counts = {};
+    signos.forEach((x) => {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+    console.log(counts)
+
+
+
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                if (valor == "Piscis") {
+                    about =
+                        "<em>Piscis</em>: Uno de los signos más sensibles de zodiaco, son personas con mucha empatía y habilidades para escuchar los problemas de los demás. Son personas muy cariñosas, por norma general, calmadas e intuitivas. Además, tienen muchísima imaginación, lo que les hará buenos en tareas relacionadas con las artes, aunque les abstraerá del mundo real más de lo que sería conveniente en determinadas ocasiones. Confían mucho en su instinto y su intuición.";
+                } else if (valor == "Mutable") {
+                    about =
+                        "<em>Géminis, Virgo, Sagitario y Piscis</em>: Pertenecen a finales de temporada, o sea cierran las estaciones y, tal como su nombre lo indica, tienen la particularidad de moldearse o adaptarse a cualquier situación. Son versátiles, multifacéticos y empáticos. Tienden a buscar el cambio y la renovación constante.";
+                } else if (valor == "Agua") {
+                    about =
+                        "<em>Cáncer, Escorpio y Piscis </em>: los tres signos del zodiaco a los que la astrología occidental vincula con el elemento agua, una fuerza de la naturaleza que les dota de una sensibilidad e intuición que otros signos no tienen.";
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.elemento) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
